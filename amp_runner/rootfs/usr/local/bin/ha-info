@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly token_file=/run/amp-runner/supervisor-token
+test -r "${token_file}" || {
+	echo "Supervisor credential is unavailable" >&2
+	exit 1
+}
+
+curl --fail-with-body --silent --show-error \
+	--header "Authorization: Bearer $(cat "${token_file}")" \
+	--header "Accept: application/json" \
+	http://supervisor/core/info | jq .

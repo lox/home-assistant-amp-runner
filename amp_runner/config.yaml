@@ -1,0 +1,27 @@
+name: Amp Runner
+version: 0.1.0
+slug: amp_runner
+description: Run Amp against the live Home Assistant configuration
+url: https://github.com/lox/home-assistant-amp-runner/tree/main/amp_runner
+image: ghcr.io/lox/home-assistant-amp-runner
+arch:
+  - aarch64
+  - amd64
+startup: application
+boot: auto
+init: false
+apparmor: true
+hassio_api: true
+hassio_role: homeassistant
+map:
+  - type: homeassistant_config
+    read_only: false
+    path: /config
+options:
+  amp_api_key: ""
+  runner_id: homeassistant
+  remote_control_terminal: false
+schema:
+  amp_api_key: password
+  runner_id: match(^[a-zA-Z0-9][a-zA-Z0-9.-]*$)
+  remote_control_terminal: bool

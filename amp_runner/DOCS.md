@@ -1,0 +1,23 @@
+# Amp Runner
+
+Amp Runner runs the Amp CLI on Home Assistant OS and registers it as a remote runner with `/config` as its working directory.
+
+## Configuration
+
+- `amp_api_key`: An Amp access token from [Amp security settings](https://ampcode.com/settings/security).
+- `runner_id`: The runner name shown in Amp. Defaults to `homeassistant`.
+- `remote_control_terminal`: Exposes terminal access through Amp remote control. Disabled by default.
+
+## Security model
+
+- The app makes outbound connections to Amp and exposes no inbound network ports.
+- The Amp token is a password option. At startup it is written to Amp's private persistent profile rather than exported to the runner process.
+- Agent shell commands do not inherit Amp or Supervisor credentials.
+- The runner remains a trusted root process inside the app container, not a security sandbox. It can access its own options and private profile.
+- `/config` is mounted read/write. Startup verifies access with a temporary file before registering the runner.
+- The app installs conservative agent guidance as `/config/AGENTS.md` only when that file does not already exist.
+- The `homeassistant` Supervisor role supports `ha-check`, `ha-info`, and guarded `ha-restart --confirm` commands.
+
+## Operation
+
+Use `ha-check` after configuration changes. Do not restart Home Assistant unless necessary and explicitly intended. The restart helper refuses to run without `--confirm`.

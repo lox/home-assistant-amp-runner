@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly token_file=/run/amp-runner/supervisor-token
+test -r "${token_file}" || {
+	echo "Supervisor credential is unavailable" >&2
+	exit 1
+}
+
+if [[ "${1:-}" != --confirm ]]; then
+	echo "usage: ha-restart --confirm" >&2
+	echo "Run ha-check first. Restarting Home Assistant is an explicit operation." >&2
+	exit 2
+fi
+
+curl --fail-with-body --silent --show-error \
+	--max-time 660 \
+	--request POST \
+	--header "Authorization: Bearer $(cat "${token_file}")" \
+	--header "Content-Type: application/json" \
+	--data '{}' \
+	http://supervisor/core/restart | jq .
