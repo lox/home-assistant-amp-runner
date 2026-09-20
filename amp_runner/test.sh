@@ -3,7 +3,7 @@ set -euo pipefail
 
 app_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-for file in config.yaml Dockerfile run.sh runner-AGENTS.md DOCS.md CHANGELOG.md sanitize-env rootfs/usr/local/bin/ha-check rootfs/usr/local/bin/ha-info rootfs/usr/local/bin/ha-restart; do
+for file in config.yaml Dockerfile run.sh bash-wrapper runner-AGENTS.md DOCS.md CHANGELOG.md rootfs/usr/local/bin/ha-check rootfs/usr/local/bin/ha-info rootfs/usr/local/bin/ha-restart; do
 	test -f "${app_dir}/${file}" || {
 		echo "missing ${file}" >&2
 		exit 1
@@ -38,8 +38,8 @@ grep -Fq -- '--no-tui' "${app_dir}/run.sh"
 grep -Fq 'production Home Assistant' "${app_dir}/runner-AGENTS.md"
 grep -Fq 'apiKey@https://ampcode.com/' "${app_dir}/run.sh"
 grep -Fq 'unset AMP_API_KEY SUPERVISOR_TOKEN HASSIO_TOKEN' "${app_dir}/run.sh"
-grep -Fq 'export BASH_ENV=/etc/amp-runner/sanitize-env' "${app_dir}/run.sh"
-grep -Fq 'unset AMP_API_KEY SUPERVISOR_TOKEN HASSIO_TOKEN' "${app_dir}/sanitize-env"
+grep -Fq 'unset AMP_API_KEY SUPERVISOR_TOKEN HASSIO_TOKEN BASH_ENV ENV' "${app_dir}/bash-wrapper"
+grep -Fq 'ENTRYPOINT ["/usr/bin/bash.real", "/usr/local/bin/amp-runner"]' "${app_dir}/Dockerfile"
 if grep -Fq 'export AMP_API_KEY' "${app_dir}/run.sh"; then
 	echo "Amp API key must not be exported to the runner environment" >&2
 	exit 1

@@ -1,1 +1,3 @@
+#!/bin/sh
 unset AMP_API_KEY SUPERVISOR_TOKEN HASSIO_TOKEN BASH_ENV ENV
+exec /usr/bin/bash.real "$@"

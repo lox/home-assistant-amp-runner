@@ -29,9 +29,11 @@ RUN apt-get update \
 COPY rootfs /
 COPY run.sh /usr/local/bin/amp-runner
 COPY runner-AGENTS.md /etc/amp-runner/AGENTS.md
-COPY sanitize-env /etc/amp-runner/sanitize-env
+RUN mv /usr/bin/bash /usr/bin/bash.real
+COPY bash-wrapper /usr/bin/bash
 
 RUN chmod 0755 \
+  /usr/bin/bash \
   /usr/local/bin/amp-runner \
   /usr/local/bin/ha-check \
   /usr/local/bin/ha-info \
@@ -39,4 +41,4 @@ RUN chmod 0755 \
 
 WORKDIR /config
 
-ENTRYPOINT ["/usr/local/bin/amp-runner"]
+ENTRYPOINT ["/usr/bin/bash.real", "/usr/local/bin/amp-runner"]
