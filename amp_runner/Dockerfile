@@ -29,6 +29,7 @@ RUN apt-get update \
 COPY rootfs /
 COPY run.sh /usr/local/bin/amp-runner
 COPY runner-AGENTS.md /etc/amp-runner/AGENTS.md
+COPY sanitize-env /etc/amp-runner/sanitize-env
 
 RUN chmod 0755 \
   /usr/local/bin/amp-runner \

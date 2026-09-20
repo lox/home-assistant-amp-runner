@@ -61,4 +61,5 @@ if [[ "${remote_control_terminal}" == true ]]; then
 fi
 
 echo "Amp Runner: starting ${runner_id} with read/write Home Assistant configuration"
+export BASH_ENV=/etc/amp-runner/sanitize-env
 exec "${AMP_HOME}/bin/amp" "${args[@]}"
