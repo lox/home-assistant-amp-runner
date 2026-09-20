@@ -104,14 +104,3 @@ jobs:
             ${{ needs.prepare.outputs.version }}
             latest
           registry-prefix: ${{ needs.prepare.outputs.registry_prefix }}
-      - name: Make published images public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          for package in \
-            home-assistant-amp-runner \
-            aarch64-home-assistant-amp-runner \
-            amd64-home-assistant-amp-runner; do
-            gh api --method PATCH "/user/packages/container/${package}" \
-              --field visibility=public
-          done
