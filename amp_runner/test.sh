@@ -16,7 +16,8 @@ config = YAML.safe_load(File.read(ARGV.fetch(0)))
 abort "wrong slug" unless config["slug"] == "amp_runner"
 abort "amd64 and aarch64 support are required" unless config.fetch("arch").sort == %w[aarch64 amd64]
 abort "Supervisor API must be enabled" unless config["hassio_api"] == true
-abort "runner needs the homeassistant Supervisor role" unless config["hassio_role"] == "homeassistant"
+abort "runner needs the manager Supervisor role for Core and backups" unless config["hassio_role"] == "manager"
+abort "Home Assistant API must be enabled" unless config["homeassistant_api"] == true
 abort "published image is required" unless config["image"] == "ghcr.io/lox/home-assistant-amp-runner"
 mapping = config.fetch("map").find { |entry| entry["type"] == "homeassistant_config" }
 abort "missing Home Assistant config mapping" unless mapping

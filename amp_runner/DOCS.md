@@ -16,7 +16,8 @@ Amp Runner runs the Amp CLI on Home Assistant OS and registers it as a remote ru
 - The runner remains a trusted root process inside the app container, not a security sandbox. It can access its own options and private profile.
 - `/config` is mounted read/write. Startup verifies access with a temporary file before registering the runner.
 - The app installs conservative agent guidance as `/config/AGENTS.md` only when that file does not already exist.
-- The `homeassistant` Supervisor role supports `ha-check`, `ha-info`, and guarded `ha-restart --confirm` commands.
+- The `manager` Supervisor role supports `ha-check`, `ha-info`, and guarded `ha-restart --confirm` commands, and lets the runner create backups. It also allows managing other apps, the host, and the app store, so treat the runner as an administrator of the Home Assistant installation.
+- Home Assistant API access lets the runner read entity state and call services through `http://supervisor/core/api/` with the token in `/run/amp-runner/supervisor-token`.
 
 ## Operation
 
