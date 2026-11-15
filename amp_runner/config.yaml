@@ -1,5 +1,5 @@
 name: Amp Runner
-version: 0.1.4
+version: 0.1.5
 slug: amp_runner
 description: Run Amp against the live Home Assistant configuration
 url: https://github.com/lox/home-assistant-amp-runner/tree/main/amp_runner

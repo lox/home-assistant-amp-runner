@@ -32,6 +32,19 @@ READY_JS = """(() => {
   return !!panel && !panel._loading;
 })()"""
 
+# Height of the tallest scrollable element, including inside shadow roots.
+MEASURE_JS = """(() => {
+  let max = document.documentElement.scrollHeight;
+  const walk = (root) => {
+    for (const el of root.querySelectorAll("*")) {
+      max = Math.max(max, el.scrollHeight);
+      if (el.shadowRoot) walk(el.shadowRoot);
+    }
+  };
+  walk(document);
+  return max;
+})()"""
+
 
 class DevTools:
     def __init__(self, args):
@@ -198,24 +211,21 @@ def capture(args, token):
         time.sleep(args.wait / 1000)
 
         if full_page:
-            # Dashboards scroll inside the frontend's own layout, so measure the
-            # tallest scrollable element as well as the document.
-            height = browser.evaluate("""(() => {
-              let max = document.documentElement.scrollHeight;
-              const walk = (root) => {
-                for (const el of root.querySelectorAll("*")) {
-                  max = Math.max(max, el.scrollHeight);
-                  if (el.shadowRoot) walk(el.shadowRoot);
-                }
-              };
-              walk(document);
-              return max;
-            })()""")
-            height = min(height, MAX_HEIGHT)
-            browser.call("Emulation.setDeviceMetricsOverride", {
-                "width": args.width, "height": height, "deviceScaleFactor": 1, "mobile": False
-            })
-            time.sleep(0.5)
+            # Dashboards scroll inside the frontend's own layout, and cards below
+            # the fold only lay out once they are visible, so grow the viewport to
+            # the tallest scrollable element until the measurement stops growing.
+            for _ in range(10):
+                measured = min(browser.evaluate(MEASURE_JS), MAX_HEIGHT)
+                if measured <= height:
+                    break
+                height = measured
+                browser.call("Emulation.setDeviceMetricsOverride", {
+                    "width": args.width, "height": height, "deviceScaleFactor": 1, "mobile": False
+                })
+                time.sleep(1)
+            # Cards revealed by the resize load their data now; give them the
+            # same settling time as the first screen.
+            time.sleep(args.wait / 1000)
 
         image = browser.call("Page.captureScreenshot", {"format": "png"})["data"]
         with open(args.output, "wb") as output:

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- Capture the full height of tall dashboards in `ha-screenshot`, which previously cut them off below the first screen.
+
 ## 0.1.4
 
 - Add `ha-screenshot`, which renders a Home Assistant frontend page to PNG with headless Chromium, so agents can see dashboards.
