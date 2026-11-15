@@ -33,6 +33,13 @@ amp_api_key="$(jq -er '.amp_api_key | select(type == "string" and length > 0)' "
 	exit 1
 }
 
+screenshot_token="$(jq -r '.screenshot_token // ""' "${options_file}")"
+(
+	umask 077
+	printf '%s' "${screenshot_token}" > "${credentials_dir}/screenshot-token"
+)
+unset screenshot_token
+
 runner_id="$(jq -er '.runner_id | select(type == "string" and test("^[a-zA-Z0-9][a-zA-Z0-9.-]*$"))' "${options_file}")"
 remote_control_terminal="$(jq -er '.remote_control_terminal | select(type == "boolean")' "${options_file}")"
 

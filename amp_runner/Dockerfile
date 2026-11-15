@@ -16,9 +16,11 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     bash \
     ca-certificates \
+    chromium-headless-shell \
     coreutils \
     curl \
     findutils \
+    fonts-dejavu-core \
     git \
     jq \
     openssh-client \
@@ -37,7 +39,8 @@ RUN chmod 0755 \
   /usr/local/bin/amp-runner \
   /usr/local/bin/ha-check \
   /usr/local/bin/ha-info \
-  /usr/local/bin/ha-restart
+  /usr/local/bin/ha-restart \
+  /usr/local/bin/ha-screenshot
 
 WORKDIR /config
 

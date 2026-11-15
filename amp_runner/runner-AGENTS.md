@@ -16,3 +16,4 @@ This directory is the live configuration of a production Home Assistant installa
 - `ha-info` reports the current Home Assistant Core state.
 - `ha-restart` refuses by default. After an explicit restart request and a successful `ha-check`, run `ha-restart --confirm`.
 - Dashboard-only YAML changes normally need a browser hard refresh rather than a restart.
+- `ha-screenshot <path> <output.png>` renders a frontend page, such as a dashboard view, to PNG when the `screenshot_token` option is set. Inspect the image after dashboard changes.

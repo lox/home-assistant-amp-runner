@@ -1,5 +1,5 @@
 name: Amp Runner
-version: 0.1.3
+version: 0.1.4
 slug: amp_runner
 description: Run Amp against the live Home Assistant configuration
 url: https://github.com/lox/home-assistant-amp-runner/tree/main/amp_runner
@@ -22,7 +22,9 @@ options:
   amp_api_key: ""
   runner_id: homeassistant
   remote_control_terminal: false
+  screenshot_token: ""
 schema:
   amp_api_key: password
   runner_id: match(^[a-zA-Z0-9][a-zA-Z0-9.-]*$)
   remote_control_terminal: bool
+  screenshot_token: password?

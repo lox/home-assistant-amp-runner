@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+
+- Add `ha-screenshot`, which renders a Home Assistant frontend page to PNG with headless Chromium, so agents can see dashboards.
+- Add the optional `screenshot_token` option for the token `ha-screenshot` uses.
+
 ## 0.1.3
 
 - Enable Home Assistant API access so the runner can read entity state instead of receiving 401 responses.

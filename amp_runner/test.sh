@@ -3,7 +3,7 @@ set -euo pipefail
 
 app_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-for file in config.yaml Dockerfile run.sh bash-wrapper runner-AGENTS.md DOCS.md CHANGELOG.md rootfs/usr/local/bin/ha-check rootfs/usr/local/bin/ha-info rootfs/usr/local/bin/ha-restart; do
+for file in config.yaml Dockerfile run.sh bash-wrapper runner-AGENTS.md DOCS.md CHANGELOG.md rootfs/usr/local/bin/ha-check rootfs/usr/local/bin/ha-info rootfs/usr/local/bin/ha-restart rootfs/usr/local/bin/ha-screenshot; do
 	test -f "${app_dir}/${file}" || {
 		echo "missing ${file}" >&2
 		exit 1
@@ -23,6 +23,7 @@ mapping = config.fetch("map").find { |entry| entry["type"] == "homeassistant_con
 abort "missing Home Assistant config mapping" unless mapping
 abort "config mapping must be read/write" unless mapping["read_only"] == false
 abort "API key must use the password schema" unless config.dig("schema", "amp_api_key") == "password"
+abort "screenshot token must use the optional password schema" unless config.dig("schema", "screenshot_token") == "password?"
 ' "${app_dir}/config.yaml"
 
 scripts=(
@@ -34,6 +35,7 @@ scripts=(
 
 bash -n "${scripts[@]}"
 shellcheck "${scripts[@]}"
+python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read())' "${app_dir}/rootfs/usr/local/bin/ha-screenshot"
 
 grep -Fq -- '--no-tui' "${app_dir}/run.sh"
 grep -Fq 'production Home Assistant' "${app_dir}/runner-AGENTS.md"
